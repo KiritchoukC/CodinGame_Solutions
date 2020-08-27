@@ -1,0 +1,13 @@
+D:\Projects\Codingame\Batman\Ep01\bin\Debug\netcoreapp3.1\Ep01.exe
+D:\Projects\Codingame\Batman\Ep01\bin\Debug\netcoreapp3.1\Ep01.deps.json
+D:\Projects\Codingame\Batman\Ep01\bin\Debug\netcoreapp3.1\Ep01.runtimeconfig.json
+D:\Projects\Codingame\Batman\Ep01\bin\Debug\netcoreapp3.1\Ep01.runtimeconfig.dev.json
+D:\Projects\Codingame\Batman\Ep01\bin\Debug\netcoreapp3.1\Ep01.dll
+D:\Projects\Codingame\Batman\Ep01\bin\Debug\netcoreapp3.1\Ep01.pdb
+D:\Projects\Codingame\Batman\Ep01\obj\Debug\netcoreapp3.1\Ep01.csprojAssemblyReference.cache
+D:\Projects\Codingame\Batman\Ep01\obj\Debug\netcoreapp3.1\Ep01.csproj.CoreCompileInputs.cache
+D:\Projects\Codingame\Batman\Ep01\obj\Debug\netcoreapp3.1\Ep01.AssemblyInfoInputs.cache
+D:\Projects\Codingame\Batman\Ep01\obj\Debug\netcoreapp3.1\Ep01.AssemblyInfo.cs
+D:\Projects\Codingame\Batman\Ep01\obj\Debug\netcoreapp3.1\Ep01.dll
+D:\Projects\Codingame\Batman\Ep01\obj\Debug\netcoreapp3.1\Ep01.pdb
+D:\Projects\Codingame\Batman\Ep01\obj\Debug\netcoreapp3.1\Ep01.genruntimeconfig.cache
