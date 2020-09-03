@@ -2,7 +2,7 @@
 
 let read _ = Console.In.ReadLine()
 
-let n = read() |> int
+let n = read () |> int
 
 let isbns =
     [ 1 .. n ] |> List.map read
@@ -11,7 +11,7 @@ let filterSome lst =
     lst
     |> List.filter Option.isSome
     |> List.map Option.get
-    
+
 let charToInt (char: char) =
     char
     |> string
