@@ -27,9 +27,9 @@ let getAllLengths ns n =
     |> List.filter (fun n' -> n' < n)
     |> List.map (fun n' -> n - n')
 
-let allXs = xs |> (@) [w]
+let allXs = w::xs
 
-let allYs = ys |> (@) [h]
+let allYs = h::ys
 
 let xLengths =
     allXs
