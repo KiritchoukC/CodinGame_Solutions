@@ -1,5 +1,6 @@
 ﻿module String =
     let split splitChars (str: string) = str.Split splitChars
+    let removeWhiteSpaces (str:string) = str |> Seq.filter (fun c -> not (c = ' ')) |> System.String.Concat
 
 
 open System
@@ -14,55 +15,46 @@ let somes lst =
     |> List.map Option.get
     
 let (W, H) =
-    //    read ()
-    "7 7"
+    read ()
     |> String.split [| ' ' |]
     |> arrayToTuple
 
-//let inputLines =
-//    [ 0 .. H - 1 ] |> List.map read
-    
-let inputLines = [
-    "A  B  C"
-    "|  |  |"
-    "|--|  |"
-    "|  |--|"
-    "|  |--|"
-    "|  |  |"
-    "1  2  3"
-]
+let inputLines =
+    [ 0 .. H - 1 ] |> List.map read
 
-let labels = inputLines.[0] |> Seq.filter (fun c -> not (c = ' ')) |> String.Concat
+let labels = inputLines.[0] |> String.removeWhiteSpaces
 
-let destinations = inputLines.[H - 1]
+let destinations = inputLines.[H - 1] |> String.removeWhiteSpaces
 
 let lines =
     inputLines
     |> List.skip 1
     |> List.take (H - 2)
 
-let getConnectorIndices line =
+let getConnectorIndices (line:string) =
     line
     |> Seq.toList
     |> List.mapi (fun index c ->
         match c with
-        | '-' -> Some index
+        | '-' ->
+            match line.[index + 1] with
+            | '-' -> Some index
+            | _ -> None
         | _ -> None)
     |> somes
 
-let connectorIndexToLabel index =
+let connectorIndexToLabelIndex index =
     index
     |> float
     |> (+) 1.
     |> (fun x -> x / 3.)
     |> Math.Ceiling
-    |> (-) 1.
+    |> (fun x -> x - 1.)
     |> int
-
+    
 let connectorIndexToConnectorTuple index =
-    let sourceIndex = connectorIndexToLabel index
-    let alphabet = [ 'A' .. 'Z' ]
-    (alphabet.[sourceIndex], alphabet.[sourceIndex + 1])
+    let sourceIndex = connectorIndexToLabelIndex index
+    (labels.[sourceIndex], labels.[sourceIndex + 1])
 
 let getConnector line =
     let hasConnector = String.exists (fun c -> c = '-') line
@@ -80,20 +72,30 @@ let connectors =
     |> somes
     |> List.fold (fun acc item -> acc @ item) []
 
-
 let rec findDestination connectors label =
     match connectors with
-    | [x] -> snd x
+    | [x] ->
+        match x with
+        | (left, right) when left = label -> snd x
+        | (left, right) when right = label -> fst x
+        | _ -> label
     | x :: rest ->
         match x with 
-        | (x, y) when x = label -> findDestination rest y // it goes from x to y
-        | (x, y) when y = label -> findDestination rest x // it goes from y to x
+        | (source, target) when source = label -> findDestination rest target  // it goes from x to y
+        | (source, target) when target = label -> findDestination rest source // it goes from y to x
         | _ -> findDestination rest label // it does not move
-    | _ -> 'Z' 
-
+    | _ -> 'Z'
+    
+let mapLabelToDestination label =
+    labels
+    |> Seq.toList
+    |> List.findIndex (fun c -> c = label)
+    |> (fun i -> destinations.[i])
+    
 let answers =
     labels
-    |> String.map (fun l -> findDestination connectors l)
     |> Seq.toList
+    |> List.map (fun l -> (l, findDestination connectors l))
+    |> List.map (fun ld -> (fst ld, mapLabelToDestination (snd ld)))
 
-answers |> List.iter (fun c -> printfn "%c" c)
+answers |> List.iter (fun c -> printfn "%c%c" (fst c) (snd c))
