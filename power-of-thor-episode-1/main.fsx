@@ -71,31 +71,18 @@ module Application =
     open Domain
     open Data
 
-    let toSign axis =
-        match axis with
-        | x when x = 0 -> '0'
-        | x when x > 0 -> '+'
-        | x when x < 0 -> '-'
-        | _ -> failwith "unexpected axis"
-
     let rec run (state: State): unit =
-        let remainingTurns =
-            int (Console.In.ReadLine()) (* The remaining amount of turns Thor can move. Do not remove this line. *)
-            
-        let remainingX = state.Light.X - state.Thor.X
-        let remainingY = state.Light.Y - state.Thor.Y
-
         let nextDirection =
-            match (toSign remainingX, toSign remainingY) with
-            | ('0', '0') -> ""
-            | ('+', '0') -> "E"
-            | ('-', '0') -> "W"
-            | ('0', '+') -> "S"
-            | ('0', '-') -> "N"
-            | ('+', '+') -> "SE"
-            | ('+', '-') -> "NE"
-            | ('-', '+') -> "SW"
-            | ('-', '-') -> "NW"
+            match (compare state.Light.X state.Thor.X, compare state.Light.Y state.Thor.Y) with
+            | (0, 0) -> ""
+            | (1, 0) -> "E"
+            | (-1, 0) -> "W"
+            | (0, 1) -> "S"
+            | (0, -1) -> "N"
+            | (1, 1) -> "SE"
+            | (1, -1) -> "NE"
+            | (-1, 1) -> "SW"
+            | (-1, -1) -> "NW"
             | x -> failwithf "Unexpected value %A" x
 
         printfn "%s" nextDirection
