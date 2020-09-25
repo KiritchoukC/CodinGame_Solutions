@@ -32,10 +32,15 @@ module Domain =
               X = x
               Y = y
               Result = "" }
+            
+    let (|EmptyCell|_|) input =
+        match input with
+        | '.' -> Some(EmptyCell)
+        | _ -> None
 
 module Data =
-    let read _ = Console.In.ReadLine()
-    let readInt _ = read () |> int
+    let private read _ = Console.In.ReadLine()
+    let private readInt _ = read () |> int
     let private width = readInt ()
     let private height = readInt ()
     let private lines =
@@ -43,15 +48,26 @@ module Data =
     let data =
         Array2D.init width height (fun x y -> lines.[y].[x])
 
-//    let data: char [,] =
-//        let temp = Array2D.create 2 2 '0'
-//        Array2D.set temp 1 1 '.'
-//        temp
-
 module Application =
     open Data
     open Domain
-
+    
+    let rec getRight state =
+        let nextX = state.X + 1
+        let rightNeighbor = Array2D.tryGet nextX state.Y state.Data
+        match rightNeighbor with
+        | None -> state.AddNoneToResult()
+        | Some EmptyCell -> getRight { state with X = nextX }
+        | Some _ -> state.AddToResult(sprintf "%i %i" nextX state.Y)
+        
+    let rec getBelow state =
+        let nextY = state.Y + 1
+        let belowNeighbor = Array2D.tryGet state.X nextY state.Data
+        match belowNeighbor with
+        | None -> state.AddNoneToResult()
+        | Some cell when cell = '.' -> getBelow { state with Y = nextY }
+        | Some _ -> state.AddToResult(sprintf "%i %i" state.X nextY)
+        
     let findNeighbors state: State option =
         let currentCell = Array2D.tryGet state.X state.Y state.Data
         match currentCell with
@@ -61,26 +77,13 @@ module Application =
             | '.' -> None
             | _ ->
                 let stateWithCurrentCell = state.AddToResult(sprintf "%i %i" state.X state.Y)
-                let rightNeighbor = Array2D.tryGet (state.X + 1) state.Y state.Data
 
-                let stateWithRightNeighbor =
-                    match rightNeighbor with
-                    | None ->
-                        stateWithCurrentCell.AddNoneToResult()
-                    | Some x when x = '.' ->
-                        stateWithCurrentCell.AddNoneToResult()
-                    | Some x  ->
-                        stateWithCurrentCell.AddToResult(sprintf "%i %i" (state.X + 1) state.Y)
+                let stateWithRightNeighbor = getRight stateWithCurrentCell
+                
+                let stateWithBelowNeighbor = getBelow { stateWithRightNeighbor with X = state.X}
+                
+                stateWithBelowNeighbor |> Some
 
-                let belowNeighbor = Array2D.tryGet state.X (state.Y + 1) state.Data
-                match belowNeighbor with
-                | None ->
-                    stateWithRightNeighbor.AddNoneToResult() |> Some
-                | Some x when x = '.' ->
-                    stateWithRightNeighbor.AddNoneToResult() |> Some
-                | Some x -> stateWithRightNeighbor.AddToResult(sprintf "%i %i" state.X (state.Y + 1)) |> Some
-
-    
     data
     |> Array2D.iteri (fun x y c ->
         let stateOpt = findNeighbors (State.Init data x y)
