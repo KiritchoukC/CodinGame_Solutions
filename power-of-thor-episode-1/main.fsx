@@ -74,15 +74,15 @@ module Application =
     let rec run (state: State): unit =
         let nextDirection =
             match (compare state.Light.X state.Thor.X, compare state.Light.Y state.Thor.Y) with
-            | (0, 0) -> ""
-            | (1, 0) -> "E"
-            | (-1, 0) -> "W"
-            | (0, 1) -> "S"
-            | (0, -1) -> "N"
-            | (1, 1) -> "SE"
-            | (1, -1) -> "NE"
-            | (-1, 1) -> "SW"
-            | (-1, -1) -> "NW"
+            | 0, 0 -> ""
+            | 1, 0 -> "E"
+            | -1, 0 -> "W"
+            | 0, 1 -> "S"
+            | 0, -1 -> "N"
+            | 1, 1 -> "SE"
+            | 1, -1 -> "NE"
+            | -1, 1 -> "SW"
+            | -1, -1 -> "NW"
             | x -> failwithf "Unexpected value %A" x
 
         printfn "%s" nextDirection
